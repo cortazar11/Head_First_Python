@@ -1,13 +1,14 @@
 from flask import Flask, session
 import os
 import swimclub
+from flask import render_template
 
 app = Flask(__name__)
 app.secret_key = 'YourSecretKey'
 
 @app.get('/')
 def index():
-    return 'Hello, World!'
+    return render_template('index.html', title='Welcome to the swimclub system', message='Welcome to the Swim Club!')
 
 def populate_data():
     if "swimmers" not in session:
@@ -24,7 +25,13 @@ def populate_data():
 @app.get('/swimmers')
 def display_swimmers():
     populate_data()
-    return str(sorted(session["swimmers"]))
+    return render_template(
+        'select.html', 
+        title='Select a swimmer', 
+        url="/showfiles",
+        select_id="swimmer",
+        data=sorted(session["swimmers"]),)
+    #return str(sorted(session["swimmers"]))
 
 
 @app.get('/files/<swimmer>')
